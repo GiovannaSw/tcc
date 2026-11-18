@@ -1312,16 +1312,13 @@
     }
 
     .hero-buttons {
+    flex-direction: column;
+    width: 100%;
+}
+}
 
-        flex-direction:
-            column;
-
-        width:
-            100%;
-    }
-    /* =====================================================
+/* =====================================================
    AVISOS (substitui o alert)
-===================================================== */
 
 #avisos {
     position: fixed;
@@ -1471,8 +1468,92 @@
         top: 80px;
     }
 }
-
+/* ===== CONFIRMAÇÃO (modal) ===== */
+.confirma-fundo {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(3px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    z-index: 100000;
+    animation: confirmaFundo 0.2s ease;
+    transition: opacity 0.25s;
 }
+
+.confirma-fundo.saindo { opacity: 0; }
+
+.confirma-caixa {
+    width: 100%;
+    max-width: 380px;
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 20px;
+    padding: 28px 24px 22px;
+    text-align: center;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+    animation: avisoEntrar 0.3s ease;
+}
+
+.confirma-icone {
+    width: 56px;
+    height: 56px;
+    margin: 0 auto 16px;
+    border-radius: 50%;
+    background: #d64545;
+    color: #fff;
+    font-size: 1.8rem;
+    font-weight: 900;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.confirma-texto {
+    font-size: 1.15rem;
+    font-weight: 700;
+    margin-bottom: 22px;
+}
+
+.confirma-botoes {
+    display: flex;
+    gap: 12px;
+}
+
+.confirma-botoes button {
+    flex: 1;
+    padding: 14px;
+    font-size: 1rem;
+    border-radius: 12px;
+    font-weight: 700;
+    font-family: 'Montserrat', sans-serif;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.confirma-cancelar {
+    background: var(--card-bg);
+    color: var(--primary);
+    border: 2px solid var(--primary);
+}
+
+.confirma-ok {
+    background: #d64545;
+    color: #fff;
+    border: 2px solid #d64545;
+}
+
+.confirma-botoes button:hover { transform: translateY(-2px); }
+
+@keyframes confirmaFundo {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+
     </style>
 
 </head>
@@ -2465,6 +2546,35 @@
             setTimeout(function () { aviso.remove(); }, 300);
         }, 3500);
     }
+        // Confirmação bonita: devolve true (apagar) ou false (cancelar)
+    function confirmar(mensagem) {
+        return new Promise(function (resolve) {
+            var fundo = document.createElement('div');
+            fundo.className = 'confirma-fundo';
+            fundo.innerHTML =
+                '<div class="confirma-caixa" role="alertdialog" aria-modal="true">' +
+                    '<div class="confirma-icone">!</div>' +
+                    '<div class="confirma-texto"></div>' +
+                    '<div class="confirma-botoes">' +
+                        '<button type="button" class="confirma-cancelar">Cancelar</button>' +
+                        '<button type="button" class="confirma-ok">Apagar</button>' +
+                    '</div>' +
+                '</div>';
+            fundo.querySelector('.confirma-texto').textContent = mensagem;
+            document.body.appendChild(fundo);
+
+            function fechar(resposta) {
+                fundo.classList.add('saindo');
+                setTimeout(function () { fundo.remove(); }, 250);
+                resolve(resposta);
+            }
+
+            fundo.querySelector('.confirma-ok').onclick = function () { fechar(true); };
+            fundo.querySelector('.confirma-cancelar').onclick = function () { fechar(false); };
+            fundo.onclick = function (e) { if (e.target === fundo) fechar(false); };
+            fundo.querySelector('.confirma-cancelar').focus();
+        });
+    }
 
     // Faz TODOS os alert() do site virarem avisos bonitos
     window.alert = function (mensagem) {
@@ -2472,7 +2582,7 @@
         var t = texto.toLowerCase();
         var tipo = 'info';
 
-        if (/sucesso|salvo|salva|cadastrad|adicionad|removid|exclu/.test(t)) {
+        if (/sucesso|salvo|salva|cadastrad|adicionad|removid|exclu|registrad|anotad|marcad|agendad|guardad|gravad|apagad/.test(t)) {
             tipo = 'sucesso';
         } else if (/erro|falha|não foi|nao foi|preench|por favor|inválid|invalid|obrigat/.test(t)) {
             tipo = 'erro';
