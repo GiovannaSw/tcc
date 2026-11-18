@@ -84,19 +84,40 @@ const recarregar = {
     pacientes: () => carregarPacientes()
 };
 
+
 async function excluirItem(tabela, id) {
-    const nomes = { remedios: 'este remédio', sintomas: 'esta anotação', consultas: 'esta consulta', pacientes: 'esta pessoa' };
-    if (!confirm(`Tem certeza que deseja excluir ${nomes[tabela]}?`)) return;
+    const nomes = {
+        remedios: 'este remédio',
+        sintomas: 'esta anotação',
+        consultas: 'esta consulta',
+        pacientes: 'esta pessoa'
+    };
+
+    const mensagem = `Tem certeza que deseja excluir ${nomes[tabela]}?`;
+
+    // Utiliza a confirmação personalizada do index.html
+    const resposta = await confirmar(mensagem);
+
+    if (!resposta) return;
 
     try {
-        const { ok, dados } = await api(`/${tabela}/${id}`, { method: 'DELETE' });
+        const { ok, dados } = await api(`/${tabela}/${id}`, {
+            method: 'DELETE'
+        });
+
         if (ok) {
             await recarregar[tabela]();
+            mostrarAviso('Excluído com sucesso!', 'sucesso');
         } else {
-            alert('Erro ao excluir: ' + ((dados && dados.erro) || 'tente novamente.'));
+            mostrarAviso(
+                'Erro ao excluir: ' + ((dados && dados.erro) || 'tente novamente.'),
+                'erro'
+            );
         }
     } catch (erro) {
-        if (erro.message !== '401') alert('Erro ao conectar com o servidor.');
+        if (erro.message !== '401') {
+            mostrarAviso('Erro ao conectar com o servidor.', 'erro');
+        }
     }
 }
 
