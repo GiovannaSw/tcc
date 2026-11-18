@@ -1319,6 +1319,159 @@
         width:
             100%;
     }
+    /* =====================================================
+   AVISOS (substitui o alert)
+===================================================== */
+
+#avisos {
+    position: fixed;
+    top: 100px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: calc(100% - 32px);
+    max-width: 420px;
+    z-index: 99999;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    pointer-events: none;
+}
+
+.aviso {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 18px;
+    border-radius: 16px;
+    color: #fff;
+    font-weight: 700;
+    font-size: 1rem;
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.25);
+    animation: avisoEntrar 0.3s ease;
+    transition: opacity 0.3s, transform 0.3s;
+}
+
+.aviso::before {
+    flex-shrink: 0;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.25);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 900;
+}
+
+.aviso-sucesso { background: #0a8f5a; }
+.aviso-sucesso::before { content: "✓"; }
+
+.aviso-erro { background: #d64545; }
+.aviso-erro::before { content: "!"; }
+
+.aviso-info { background: var(--primary); }
+.aviso-info::before { content: "i"; }
+
+.aviso.saindo {
+    opacity: 0;
+    transform: translateY(-10px);
+}
+
+@keyframes avisoEntrar {
+    from { opacity: 0; transform: translateY(-10px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+
+/* =====================================================
+   CORREÇÕES PARA CELULAR
+===================================================== */
+
+/* inputs lado a lado podem encolher e quebrar linha */
+.form-saude input,
+.form-saude select,
+.form-saude textarea {
+    min-width: 0;
+    max-width: 100%;
+}
+
+.form-saude > div {
+    flex-wrap: wrap;
+}
+
+.form-saude > div > input {
+    flex: 1 1 140px;
+}
+
+@media (max-width: 1000px) {
+    /* corrige a coluna "fantasma" que alargava a página */
+    .col-span-2 {
+        grid-column: auto;
+    }
+}
+
+@media (max-width: 600px) {
+
+    .top-navbar {
+        top: 10px;
+        width: calc(100% - 16px);
+        padding: 6px 8px;
+        border-radius: 40px;
+    }
+
+    .logo-container {
+        padding: 4px 12px;
+        flex-shrink: 0;
+    }
+
+    .logo-container img {
+        height: 34px;
+    }
+
+    .nav-menu {
+        margin: 0 0 0 6px;
+        gap: 0;
+        min-width: 0;
+        justify-content: space-between;
+    }
+
+    .nav-link {
+        flex: 1;
+        min-width: 0;
+        padding: 8px 0;
+        font-size: 1.15rem;
+        border-radius: 20px;
+    }
+
+    .hero-section {
+        padding: 100px 5% 40px;
+    }
+
+    .page-header {
+        padding: 100px 5% 30px;
+    }
+
+    h2 {
+        font-size: 1.7rem;
+    }
+
+    .card-glass {
+        padding: 22px;
+    }
+
+    .hero-content {
+        padding: 22px;
+    }
+
+    .mega-title {
+        font-size: 2rem;
+    }
+
+    #avisos {
+        top: 80px;
+    }
+}
+
 }
     </style>
 
@@ -2291,8 +2444,45 @@
          JAVASCRIPT
     ========================================================= -->
 
-  <script src="dashboard.js"></script>
+    <script>
+    // Avisos bonitos
+    function mostrarAviso(mensagem, tipo) {
+        var container = document.getElementById('avisos');
+        if (!container) {
+            container = document.createElement('div');
+            container.id = 'avisos';
+            document.body.appendChild(container);
+        }
 
+        var aviso = document.createElement('div');
+        aviso.className = 'aviso aviso-' + (tipo || 'info');
+        aviso.setAttribute('role', tipo === 'erro' ? 'alert' : 'status');
+        aviso.textContent = mensagem;
+        container.appendChild(aviso);
+
+        setTimeout(function () {
+            aviso.classList.add('saindo');
+            setTimeout(function () { aviso.remove(); }, 300);
+        }, 3500);
+    }
+
+    // Faz TODOS os alert() do site virarem avisos bonitos
+    window.alert = function (mensagem) {
+        var texto = String(mensagem);
+        var t = texto.toLowerCase();
+        var tipo = 'info';
+
+        if (/sucesso|salvo|salva|cadastrad|adicionad|removid|exclu/.test(t)) {
+            tipo = 'sucesso';
+        } else if (/erro|falha|não foi|nao foi|preench|por favor|inválid|invalid|obrigat/.test(t)) {
+            tipo = 'erro';
+        }
+
+        mostrarAviso(texto, tipo);
+    };
+  </script>
+
+  <script src="dashboard.js"></script>
 
 </body>
 
