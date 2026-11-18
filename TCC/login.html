@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Saúde em Dia</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700;900&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary: #0066cc; 
+            --primary-hover: #0052a3;
+            --bg-light: #f4f7f9; 
+            --text-main: #2c3e50; 
+            --text-muted: #5c6c7c;
+            --border-color: #e2e8f0;
+        }
+
+        body {
+            margin: 0; height: 100vh;
+            background-color: var(--bg-light);
+            background-image: radial-gradient(var(--border-color) 2px, transparent 2px);
+            background-size: 30px 30px;
+            font-family: 'Montserrat', sans-serif;
+            display: flex; justify-content: center; align-items: center;
+            overflow: hidden;
+            
+            /* Adiciona profundidade para o efeito 3D da transição funcionar */
+            perspective: 1200px; 
+        }
+
+        /* --- O WRAPPER DA BORDA --- */
+        .card-wrapper {
+            position: relative;
+            width: 450px;
+            border-radius: 24px;
+            padding: 4px; /* Espessura da linha que roda */
+            overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0, 102, 204, 0.15);
+            
+            /* Animação 3D de Entrada do Cartão */
+            opacity: 0; 
+            transform: rotateY(-90deg) scale(0.8);
+            animation: flipIn 0.8s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+        }
+
+        /* --- EFEITO DAS DUAS LUZES SE PERSEGUINDO --- */
+        .card-wrapper::before {
+            content: '';
+            position: absolute;
+            top: -50%; left: -50%; width: 200%; height: 200%;
+            /* O segredo das duas luzes: o gradiente pinta o azul em 50% e em 100%, deixando o resto transparente */
+            background: conic-gradient(
+                from 0deg, 
+                transparent 0%, transparent 35%, var(--primary) 50%, 
+                transparent 50%, transparent 85%, var(--primary) 100%
+            );
+            animation: spinLight 4s linear infinite;
+        }
+
+        /* --- ANIMAÇÕES --- */
+        @keyframes spinLight { 100% { transform: rotate(360deg); } }
+        
+        /* O cartão entra girando e crescendo */
+        @keyframes flipIn { 
+            0% { opacity: 0; transform: rotateY(-90deg) scale(0.8); } 
+            100% { opacity: 1; transform: rotateY(0deg) scale(1); } 
+        }
+        
+        /* O cartão sai girando para trás */
+        @keyframes flipOut { 
+            0% { opacity: 1; transform: rotateY(0deg) scale(1); } 
+            100% { opacity: 0; transform: rotateY(90deg) scale(0.8); } 
+        }
+
+        /* O CARTÃO BRANCO */
+        .login-card {
+            position: relative;
+            background: rgba(255, 255, 255, 0.98);
+            border-radius: 20px;
+            padding: 40px 40px;
+            text-align: center;
+            z-index: 10;
+        }
+
+        .login-logo { width: 90px; margin-bottom: 10px; filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.4)); }
+        h1 { font-size: 26px; font-weight: 800; margin: 0 0 5px 0; color: var(--primary); }
+        .subtitle { font-size: 14px; font-weight: 500; color: var(--text-muted); margin-bottom: 30px; }
+
+        .input-group { text-align: left; margin-bottom: 20px; }
+        .input-group label { font-size: 13px; font-weight: 700; color: var(--text-main); display: block; margin-bottom: 8px; text-transform: uppercase; }
+        .input-group input { width: 100%; padding: 16px; background: #f8fafc; border: 2px solid var(--border-color); border-radius: 12px; color: var(--text-main); font-family: 'Montserrat', sans-serif; font-size: 16px; font-weight: 500; outline: none; transition: 0.3s; box-sizing: border-box; }
+        .input-group input:focus { border-color: var(--primary); background: #ffffff; box-shadow: 0 0 0 4px rgba(0, 102, 204, 0.1); }
+
+        .btn-access { width: 100%; padding: 18px; margin-top: 10px; background: var(--primary); color: white; border: none; border-radius: 12px; font-size: 16px; font-weight: 800; font-family: 'Montserrat', sans-serif; cursor: pointer; transition: 0.3s; box-shadow: 0 8px 20px rgba(0, 102, 204, 0.25); }
+        .btn-access:hover { background: var(--primary-hover); transform: translateY(-2px); box-shadow: 0 10px 25px rgba(0, 102, 204, 0.35); }
+        
+        .footer-links { display: flex; justify-content: space-between; margin-top: 25px; font-size: 14px; font-weight: 600; }
+        .footer-links a { color: var(--text-muted); text-decoration: none; transition: 0.3s; cursor: pointer; }
+        .footer-links a:hover { color: var(--primary); }
+
+        @media (max-width: 500px) { .card-wrapper { width: 90%; } .login-card { padding: 40px 25px; } }
+    </style>
+</head>
+<body>
+
+    <div class="card-wrapper" id="cardAnimado">
+        <div class="login-card">
+            
+            <img src="img/img2.png" alt="Logo Saúde em Dia" class="login-logo">
+            
+            <h1>Acesso ao Painel</h1>
+            <div class="subtitle">Insira seus dados para continuar</div>
+
+            <form id="login-form">
+                <div class="input-group">
+                    <label>E-mail</label>
+                    <input type="email" id="username" placeholder="Digite seu e-mail" autocomplete="username" required>
+                </div>
+
+                <div class="input-group">
+                    <label>Senha</label>
+                    <input type="password" id="password" placeholder="••••••••" autocomplete="current-password" required>
+                </div>
+
+                <div id="error-message" style="display:none; color:#d32f2f; font-size:13px; font-weight:700; margin-bottom:10px;"></div>
+
+                <button type="submit" id="btn-entrar" class="btn-access">Entrar no Sistema</button>
+            </form>
+
+            <div class="footer-links">
+                <a href="#">Esqueci a senha</a>
+                <a onclick="virarPagina('cadastro.html')" style="color: var(--primary);">Criar conta nova</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Função para o Flip 3D de transição
+        function virarPagina(url) {
+            const card = document.getElementById('cardAnimado');
+            // Aplica a animação de saída (FlipOut)
+            card.style.animation = "flipOut 0.5s cubic-bezier(0.5, 0, 0.2, 1) forwards";
+            
+            // Espera meio segundo para a animação terminar e muda a página
+            setTimeout(() => {
+                window.location.href = url;
+            }, 450);
+        }
+    </script>
+    <script src="login-script.js"></script>
+</body>
+</html>

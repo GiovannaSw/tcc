@@ -1,0 +1,100 @@
+:root {
+    --primary-color: #0077b6;
+    --bg-color: #f0faff;
+    --error-color: #d32f2f;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--bg-color);
+    /* Mesmo padrão de fundo do login */
+    background-image: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%230077b6' fill-opacity='0.08'%3E%3Cpath d='M30 10h5v5h-5zM10 30h5v5h-10zM50 20h5v5h-5zM20 50h5v5h-5zM60 60h5v5h-5z'/%3E%3Ccircle cx='40' cy='40' r='2'/%3E%3Cpath d='M38 35h4v10h-4zM35 38h10v4h-10z'/%3E%3C/g%3E%3C/svg%3E");
+}
+
+.signup-container {
+    background: white;
+    padding: 40px;
+    border-radius: 25px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+    width: 350px;
+    text-align: center;
+    border: 1px solid rgba(0,119,182,0.1);
+}
+
+.icon {
+    font-size: 50px;
+    display: block;
+    margin-bottom: 10px;
+}
+
+h1 {
+    color: var(--primary-color);
+    margin: 0;
+}
+
+p {
+    color: #666;
+    margin-bottom: 25px;
+    font-size: 14px;
+}
+
+input {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    box-sizing: border-box;
+    outline-color: var(--primary-color);
+    transition: 0.2s;
+}
+
+input:focus {
+    border-color: var(--primary-color);
+}
+
+button {
+    width: 100%;
+    padding: 12px;
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+    margin-top: 10px;
+}
+
+button:hover {
+    background: #005f8d;
+    transform: translateY(-2px);
+}
+
+.error {
+    color: var(--error-color);
+    font-size: 14px;
+    margin-top: 15px;
+    display: none;
+}
+
+.login-link {
+    margin-top: 20px;
+}
+
+.login-link a {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.login-link a:hover {
+    text-decoration: underline;
+}

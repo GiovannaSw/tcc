@@ -1,0 +1,121 @@
+/* Estilo para os Cards de Resumo */
+
+.dashboard-grid {
+
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+
+    gap: 15px;
+
+    margin-top: 20px;
+
+}
+
+
+
+.card-resumo {
+
+    background: #1054ba;
+
+    padding: 15px;
+
+    border-radius: 18px;
+
+    border-left: 5px solid var(--primary);
+
+    transition: 0.3s;
+
+}
+
+
+
+.card-resumo h4 {
+
+    margin: 0 0 8px 0;
+
+    font-size: 14px;
+
+    color: #666;
+
+    text-transform: uppercase;
+
+}
+
+
+
+.card-resumo p {
+
+    margin: 0;
+
+    font-weight: bold;
+
+    color: #333;
+
+}
+
+
+
+/* Alerta de Pendência */
+
+.alerta-pendencia {
+
+    background: #fff3f3;
+
+    border: 1px solid #ffcccc;
+
+    color: #d32f2f;
+
+    padding: 15px;
+
+    border-radius: 15px;
+
+    margin-bottom: 20px;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    font-weight: 500;
+
+}
+
+
+
+.alerta-pendencia .dot {
+
+    height: 10px;
+
+    width: 10px;
+
+    background-color: #d32f2f;
+
+    border-radius: 50%;
+
+    display: inline-block;
+
+    animation: blink 1s infinite;
+
+}
+
+
+
+@keyframes blink {
+
+    0% { opacity: 1; }
+
+    50% { opacity: 0.3; }
+
+    100% { opacity: 1; }
+
+}
+
+
+
+@media (max-width: 600px) {
+
+    .dashboard-grid { grid-template-columns: 1fr; }
+
+}

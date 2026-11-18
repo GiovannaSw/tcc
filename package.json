@@ -1,0 +1,14 @@
+{
+  "name": "saude-em-dia",
+  "version": "1.0.0",
+  "description": "Saúde em Dia (TCC): frontend + API",
+  "private": true,
+  "scripts": {
+    "postinstall": "npm install --prefix backend",
+    "start": "node backend/server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "license": "ISC"
+}

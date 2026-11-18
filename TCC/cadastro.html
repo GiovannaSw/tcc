@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro - Saúde em Dia</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700;900&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary: #0066cc; 
+            --primary-hover: #0052a3;
+            --bg-light: #f4f7f9; 
+            --text-main: #2c3e50; 
+            --text-muted: #5c6c7c;
+            --border-color: #e2e8f0;
+        }
+
+        body {
+            margin: 0; min-height: 100vh; background-color: var(--bg-light);
+            background-image: radial-gradient(var(--border-color) 2px, transparent 2px); background-size: 30px 30px;
+            font-family: 'Montserrat', sans-serif; display: flex; justify-content: center; align-items: center;
+            overflow-x: hidden; padding: 20px 0;
+            perspective: 1200px; /* Profundidade 3D */
+        }
+
+        .card-wrapper {
+            position: relative; width: 450px; border-radius: 24px; padding: 4px; overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0, 102, 204, 0.15);
+            /* O cadastro vem girando do outro lado! */
+            opacity: 0; transform: rotateY(90deg) scale(0.8);
+            animation: flipInRight 0.8s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+        }
+
+        /* DUAS LUZES SE PERSEGUINDO */
+        .card-wrapper::before {
+            content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+            background: conic-gradient(
+                from 0deg, 
+                transparent 0%, transparent 35%, var(--primary) 50%, 
+                transparent 50%, transparent 85%, var(--primary) 100%
+            );
+            animation: spinLight 4s linear infinite;
+        }
+
+        @keyframes spinLight { 100% { transform: rotate(360deg); } }
+        
+        @keyframes flipInRight { 0% { opacity: 0; transform: rotateY(90deg) scale(0.8); } 100% { opacity: 1; transform: rotateY(0deg) scale(1); } }
+        @keyframes flipOutRight { 0% { opacity: 1; transform: rotateY(0deg) scale(1); } 100% { opacity: 0; transform: rotateY(-90deg) scale(0.8); } }
+
+        .login-card {
+            position: relative; background: rgba(255, 255, 255, 0.98); border-radius: 20px;
+            padding: 40px 40px; text-align: center; z-index: 10;
+        }
+
+        .login-logo { width: 75px; margin-bottom: 5px; filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.4)); }
+        h1 { font-size: 24px; font-weight: 800; margin: 0 0 5px 0; color: var(--primary); }
+        .subtitle { font-size: 14px; font-weight: 500; color: var(--text-muted); margin-bottom: 25px; }
+
+        .input-group { text-align: left; margin-bottom: 15px; }
+        .input-group label { font-size: 12px; font-weight: 700; color: var(--text-main); display: block; margin-bottom: 6px; text-transform: uppercase; }
+        .input-group input { width: 100%; padding: 14px; background: #f8fafc; border: 2px solid var(--border-color); border-radius: 10px; color: var(--text-main); font-family: 'Montserrat', sans-serif; font-size: 15px; font-weight: 500; outline: none; transition: 0.3s; box-sizing: border-box; }
+        .input-group input:focus { border-color: var(--primary); background: #ffffff; box-shadow: 0 0 0 4px rgba(0, 102, 204, 0.1); }
+
+        .btn-access { width: 100%; padding: 16px; margin-top: 10px; background: var(--primary); color: white; border: none; border-radius: 12px; font-size: 16px; font-weight: 800; font-family: 'Montserrat', sans-serif; cursor: pointer; transition: 0.3s; box-shadow: 0 8px 20px rgba(0, 102, 204, 0.25); }
+        .btn-access:hover { background: var(--primary-hover); transform: translateY(-2px); box-shadow: 0 10px 25px rgba(0, 102, 204, 0.35); }
+        
+        .footer-links { display: flex; justify-content: center; margin-top: 25px; font-size: 14px; font-weight: 600; }
+        .footer-links a { color: var(--text-muted); text-decoration: none; transition: 0.3s; cursor: pointer; }
+        .footer-links a:hover { color: var(--primary); }
+
+        @media (max-width: 500px) { .card-wrapper { width: 90%; } .login-card { padding: 30px 20px; } }
+    </style>
+</head>
+<body>
+
+    <div class="card-wrapper" id="cardAnimado">
+        <div class="login-card">
+            
+            <img src="img/img2.png" alt="Logo Saúde em Dia" class="login-logo">
+            
+            <h1>Criar Nova Conta</h1>
+            <div class="subtitle">Preencha seus dados com atenção</div>
+
+            <div class="input-group">
+                <label>Nome Completo</label>
+                <input type="text" id="nome" placeholder="Ex: Maria da Silva">
+            </div>
+
+            <div class="input-group">
+                <label>E-mail</label>
+                <input type="email" id="email" placeholder="maria@email.com">
+            </div>
+
+            <div class="input-group">
+                <label>Criar Senha</label>
+                <input type="password" id="senha" placeholder="Mínimo de 6 caracteres">
+            </div>
+
+            <!-- Espaço para exibir erros ou sucesso -->
+            <div id="mensagem-tela" style="display: none; font-size: 13px; font-weight: 700; margin-bottom: 15px;"></div>
+
+            <!-- Mudamos o onclick para chamar a função que fala com o banco -->
+            <button class="btn-access" onclick="fazerCadastro()">Finalizar Cadastro</button>
+
+            <div class="footer-links">
+                <a onclick="virarPagina('login.html')">Já tem uma conta? <span style="color: var(--primary);">Faça Login</span></a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function virarPagina(url) {
+            const card = document.getElementById('cardAnimado');
+            card.style.animation = "flipOutRight 0.5s cubic-bezier(0.5, 0, 0.2, 1) forwards";
+            
+            setTimeout(() => {
+                window.location.href = url;
+            }, 450); 
+        }
+        async function fazerCadastro() {
+            // Pega os dados que o usuário digitou
+            const nomeInput = document.getElementById('nome').value;
+            const emailInput = document.getElementById('email').value;
+            const senhaInput = document.getElementById('senha').value;
+            const mensagemDiv = document.getElementById('mensagem-tela');
+
+            // Validação rápida para ver se está vazio
+            if(senhaInput && senhaInput.length < 6) {
+                mensagemDiv.textContent = "A senha precisa ter no mínimo 6 caracteres.";
+                mensagemDiv.style.color = "red";
+                mensagemDiv.style.display = "block";
+                return;
+            }
+
+            if(!nomeInput || !emailInput || !senhaInput) {
+                mensagemDiv.textContent = "Por favor, preencha todos os campos.";
+                mensagemDiv.style.color = "red";
+                mensagemDiv.style.display = "block";
+                return;
+            }
+
+            try {
+                // Envia os dados para a rota do Backend
+                const resposta = await fetch('/api/cadastro', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ nome: nomeInput, email: emailInput, senha: senhaInput })
+                });
+
+                const dados = await resposta.json();
+
+                if (resposta.ok) {
+                    // Sucesso: Mostra mensagem verde e vira a página automaticamente
+                    mensagemDiv.textContent = "Cadastro realizado com sucesso! Redirecionando...";
+                    mensagemDiv.style.color = "green";
+                    mensagemDiv.style.display = "block";
+                    
+                    // Espera 1,5 segundos para o usuário ler, e aí sim roda a sua animação
+                    setTimeout(() => {
+                        virarPagina('login.html');
+                    }, 1500);
+                } else {
+                    // Erro (ex: e-mail já existe): Mostra mensagem em vermelho
+                    mensagemDiv.textContent = dados.erro;
+                    mensagemDiv.style.color = "red";
+                    mensagemDiv.style.display = "block";
+                }
+            } catch (erro) {
+                mensagemDiv.textContent = "Erro ao conectar com o servidor.";
+                mensagemDiv.style.color = "red";
+                mensagemDiv.style.display = "block";
+            }
+        }
+    </script>
+</body>
+</html>
